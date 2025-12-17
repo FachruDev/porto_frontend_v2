@@ -4,7 +4,7 @@ import { Form, useActionData, useLoaderData, useNavigation } from "react-router"
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
-import { apiFetch } from "~/lib/api";
+import { getHero, upsertHero } from "~/lib/cms/heroes";
 import type { Hero, Locale } from "~/lib/types";
 
 type ActionData = { error?: string; hero?: Hero };
@@ -13,11 +13,8 @@ const pick = (hero: Hero, locale: Locale) =>
   hero.translations.find((t) => t.locale === locale) ?? { locale, title: "", subtitle: "" };
 
 export const clientLoader: ClientLoaderFunction = async () => {
-  const hero = await apiFetch<Hero | Hero[] | Record<string, never> | null>("/cms/heroes");
-  if (Array.isArray(hero)) {
-    return { hero: hero[0] ?? null };
-  }
-  return { hero: hero && "translations" in hero ? (hero as Hero) : null };
+  const hero = await getHero();
+  return { hero };
 };
 
 export const clientAction: ClientActionFunction = async ({ request }) => {
@@ -33,15 +30,11 @@ export const clientAction: ClientActionFunction = async ({ request }) => {
   }
 
   try {
-    const updated = await apiFetch<Hero>(`/cms/heroes`, {
-      method: "PUT",
-      auth: true,
-      body: {
-        translations: [
-          { locale: "EN", title: titleEn, subtitle: subtitleEn || undefined },
-          { locale: "ID", title: titleId, subtitle: subtitleId || undefined },
-        ],
-      },
+    const updated = await upsertHero({
+      translations: [
+        { locale: "EN", title: titleEn, subtitle: subtitleEn || undefined },
+        { locale: "ID", title: titleId, subtitle: subtitleId || undefined },
+      ],
     });
     return { hero: updated };
   } catch (error) {
