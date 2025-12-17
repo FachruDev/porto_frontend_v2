@@ -44,6 +44,21 @@ const adminNav = [
     url: "/admin/contact-info",
     icon: Phone,
   },
+  {
+    title: "Experiences",
+    url: "/admin/experiences",
+    icon: FileText,
+  },
+  {
+    title: "Skills",
+    url: "/admin/skills",
+    icon: Sparkles,
+  },
+  {
+    title: "Certificates",
+    url: "/admin/certificates",
+    icon: FileText,
+  },
 ];
 
 export default function AdminLayout() {

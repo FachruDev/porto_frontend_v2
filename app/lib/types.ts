@@ -52,3 +52,53 @@ export type ContactInformation = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ExperienceTranslation = {
+  id?: number;
+  locale: Locale;
+  title: string;
+  description?: string | null;
+  experienceId?: number;
+};
+
+export type Experience = {
+  id: number;
+  institution: string;
+  years: string;
+  sortOrder: number;
+  translations: ExperienceTranslation[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SkillLevel = "BEGINNER" | "MIDDLE" | "PROFESSIONAL";
+
+export type Skill = {
+  id: number;
+  title: string;
+  image?: string | null;
+  level: SkillLevel;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CertificateTranslation = {
+  id?: number;
+  locale: Locale;
+  title: string;
+  description?: string | null;
+  certificateId?: number;
+};
+
+export type Certificate = {
+  id: number;
+  file: string;
+  previewImg?: string | null;
+  issuedBy?: string | null;
+  issuedOn?: string | null;
+  sortOrder: number;
+  translations: CertificateTranslation[];
+  createdAt: string;
+  updatedAt: string;
+};
