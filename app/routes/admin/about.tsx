@@ -90,7 +90,6 @@ export default function AboutPage() {
                 alt="Profile"
                 className="h-32 w-32 rounded-lg object-cover border"
               />
-              <p className="text-xs text-muted-foreground break-all">{about.profile}</p>
             </div>
           ) : (
             <p className="text-xs text-muted-foreground">Belum ada foto profil.</p>
@@ -126,7 +125,6 @@ export default function AboutPage() {
             <p className="text-xs text-muted-foreground">
               Upload image untuk mengganti avatar. Biarkan kosong untuk mempertahankan yang lama.
             </p>
-            <Input name="profile" defaultValue={about?.profile ?? ""} placeholder="Atau isi URL gambar langsung" />
           </div>
 
           <fieldset className="space-y-4 rounded-xl border p-4">

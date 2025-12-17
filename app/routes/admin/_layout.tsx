@@ -1,4 +1,4 @@
-import { FileText, LayoutDashboard, LogOut, ShieldCheck, Sparkles } from "lucide-react";
+import { FileText, LayoutDashboard, LogOut, ShieldCheck, Sparkles, Settings, Phone } from "lucide-react";
 import type { ClientLoaderFunction } from "react-router";
 import { Outlet, redirect, useLocation, useNavigate } from "react-router";
 
@@ -33,6 +33,16 @@ const adminNav = [
     title: "About",
     url: "/admin/about",
     icon: FileText,
+  },
+  {
+    title: "Web Config",
+    url: "/admin/web-config",
+    icon: Settings,
+  },
+  {
+    title: "Contact Info",
+    url: "/admin/contact-info",
+    icon: Phone,
   },
 ];
 
