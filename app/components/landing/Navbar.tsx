@@ -1,13 +1,14 @@
 "use client"
 
-import { useEffect, useMemo, useRef } from "react"
-import * as THREE from "three"
+import { useEffect, useState } from "react"
 import { LanguageToggle } from "./LanguageToggle"
 
 const links = [
   { label: "Home", href: "#" },
-  { label: "Contact", href: "#" },
-  { label: "Blog", href: "#" },
+  { label: "About", href: "#about" },
+  { label: "Work", href: "#work" },
+  { label: "Journal", href: "#journal" },
+  { label: "Contact", href: "#contact" },
 ]
 
 type Props = {
@@ -16,121 +17,91 @@ type Props = {
 }
 
 export function Navbar({ locale = "EN", onLocaleChange }: Props) {
-  const mountRef = useRef<HTMLDivElement | null>(null)
-  const gradientId = useMemo(() => `grad-${Math.random().toString(36).slice(2)}`, [])
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
 
   useEffect(() => {
-    if (!mountRef.current) return
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
 
-    const width = mountRef.current.clientWidth
-    const height = 120
+      if (currentScrollY < 10) {
+        setIsVisible(true)
+      } else if (currentScrollY > lastScrollY) {
+        setIsVisible(false)
+      } else {
+        setIsVisible(true)
+      }
 
-    const scene = new THREE.Scene()
-    const camera = new THREE.OrthographicCamera(-width / 2, width / 2, height / 2, -height / 2, 1, 1000)
-    camera.position.z = 10
-
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
-    renderer.setSize(width, height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    mountRef.current.appendChild(renderer.domElement)
-
-    const geometry = new THREE.PlaneGeometry(width, height)
-    const material = new THREE.ShaderMaterial({
-      transparent: true,
-      uniforms: {
-        u_time: { value: 0 },
-        u_color1: { value: new THREE.Color(0x22d3ee) },
-        u_color2: { value: new THREE.Color(0x6366f1) },
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform float u_time;
-        uniform vec3 u_color1;
-        uniform vec3 u_color2;
-        varying vec2 vUv;
-        void main() {
-          float wave = sin((vUv.x + u_time * 0.2) * 6.2831) * 0.08;
-          float mixVal = smoothstep(0.0, 1.0, vUv.y + wave);
-          vec3 color = mix(u_color1, u_color2, mixVal);
-          gl_FragColor = vec4(color, 0.8);
-        }
-      `,
-    })
-
-    const plane = new THREE.Mesh(geometry, material)
-    scene.add(plane)
-
-    let animId: number
-    const animate = () => {
-      animId = requestAnimationFrame(animate)
-      ;(material.uniforms.u_time.value as number) += 0.01
-      renderer.render(scene as any, camera as any)
+      setLastScrollY(currentScrollY)
     }
-    animate()
 
-    const handleResize = () => {
-      if (!mountRef.current) return
-      const w = mountRef.current.clientWidth
-      camera.left = -w / 2
-      camera.right = w / 2
-      camera.updateProjectionMatrix()
-      renderer.setSize(w, height)
-    }
-    window.addEventListener("resize", handleResize)
-
-    return () => {
-      cancelAnimationFrame(animId)
-      window.removeEventListener("resize", handleResize)
-      material.dispose()
-      geometry.dispose()
-      renderer.dispose()
-      mountRef.current?.removeChild(renderer.domElement)
-    }
-  }, [gradientId])
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [lastScrollY])
 
   return (
-    <header className="relative z-20">
-      <div ref={mountRef} className="pointer-events-none absolute inset-x-0 top-0 h-[120px] w-full" aria-hidden />
-      <nav className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-2xl border border-white/10 bg-slate-900/60 px-4 py-3 text-white shadow-lg backdrop-blur">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-lg font-bold">
-            ✦
+    <header
+      className={`fixed left-0 right-0 top-0 z-50 transition-transform duration-700 ease-in-out ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
+      <div className="relative px-4 py-4 md:px-6">
+        <nav className="relative mx-auto max-w-7xl rounded-full border border-stone-800/20 bg-white/95 shadow-xl backdrop-blur-md">
+          {/* Natural texture overlay */}
+          <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-stone-100/50 via-transparent to-stone-50/30" />
+          
+          <div className="relative flex items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-4">
+            {/* Logo - minimalist Nordic style */}
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-stone-300 bg-stone-900 shadow-sm md:h-10 md:w-10">
+                <svg className="h-5 w-5 text-stone-100 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m9-9H3" />
+                </svg>
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-sm font-medium tracking-wide text-stone-900 md:text-base">Portfolio</p>
+              </div>
+            </div>
+
+            {/* Navigation - clean & minimal */}
+            <div className="hidden items-center gap-1 md:gap-2 lg:flex">
+              {links.map((link) => (
+                <button
+                  key={link.label}
+                  className="group relative px-3 py-2 text-sm font-medium text-stone-700 transition-colors hover:text-stone-900 md:px-4"
+                  type="button"
+                >
+                  <span className="relative">{link.label}</span>
+                  <span className="absolute bottom-0 left-1/2 h-px w-0 -translate-x-1/2 bg-stone-900 transition-all duration-300 group-hover:w-3/4" />
+                </button>
+              ))}
+            </div>
+
+            {/* Right section */}
+            <div className="flex items-center gap-2 md:gap-3">
+              <LanguageToggle locale={locale} onChange={onLocaleChange} />
+              
+              {/* CTA - simple & organic */}
+              <button
+                type="button"
+                className="hidden rounded-lg border border-stone-900 bg-stone-900 px-4 py-2 text-sm font-medium text-stone-50 transition-all hover:bg-stone-800 sm:block"
+              >
+                Get in Touch
+              </button>
+
+              {/* Mobile menu */}
+              <button
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-stone-300 bg-stone-50 text-stone-900 transition-colors hover:bg-stone-100 lg:hidden"
+                type="button"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-cyan-200">Portfolio</p>
-            <p className="text-sm font-semibold">Creative Lab</p>
-          </div>
-        </div>
-        <div className="hidden items-center gap-4 rounded-full bg-white/10 px-3 py-2 text-sm font-medium text-white md:flex">
-          {links.map((link) => (
-            <button
-              key={link.label}
-              className="rounded-full px-3 py-1 transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-              type="button"
-            >
-              {link.label}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-3">
-          <LanguageToggle locale={locale} onChange={onLocaleChange} />
-          <button
-            type="button"
-            className="rounded-full border border-white/30 bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:border-white/50 hover:bg-white/20"
-          >
-            Contact
-          </button>
-          <button className="md:hidden rounded-lg border border-white/30 bg-white/10 px-2 py-2 text-sm" type="button">
-            ☰
-          </button>
-        </div>
-      </nav>
+        </nav>
+      </div>
     </header>
   )
 }

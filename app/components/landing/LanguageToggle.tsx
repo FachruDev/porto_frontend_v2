@@ -20,12 +20,14 @@ export function LanguageToggle({ onChange, locale: controlled = "EN" }: Props) {
   }
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-1 py-1 text-xs text-white shadow-lg backdrop-blur">
+    <div className="flex items-center gap-0.5 rounded-lg border border-stone-300 bg-stone-50 p-0.5 text-xs backdrop-blur-sm">
       <button
         type="button"
         onClick={() => handle("EN")}
-        className={`rounded-full px-3 py-1 transition ${
-          locale === "EN" ? "bg-white text-slate-900 shadow" : "text-white/70 hover:text-white"
+        className={`rounded-md px-2.5 py-1 font-medium transition-all duration-200 md:px-3 md:py-1.5 ${
+          locale === "EN"
+            ? "bg-stone-900 text-stone-50 shadow-sm"
+            : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
         }`}
       >
         EN
@@ -33,8 +35,10 @@ export function LanguageToggle({ onChange, locale: controlled = "EN" }: Props) {
       <button
         type="button"
         onClick={() => handle("ID")}
-        className={`rounded-full px-3 py-1 transition ${
-          locale === "ID" ? "bg-white text-slate-900 shadow" : "text-white/70 hover:text-white"
+        className={`rounded-md px-2.5 py-1 font-medium transition-all duration-200 md:px-3 md:py-1.5 ${
+          locale === "ID"
+            ? "bg-stone-900 text-stone-50 shadow-sm"
+            : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
         }`}
       >
         ID

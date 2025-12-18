@@ -19,10 +19,12 @@ export default function LandingPage({
   const normalizedExperiences = Array.isArray(experiences) ? experiences : [];
 
   return (
-    <main className="min-h-screen space-y-10 bg-linear-to-b from-slate-50 to-white px-4 py-10 dark:from-slate-950 dark:to-slate-900 md:px-10">
-      <HeroSection hero={hero} locale={locale} />
-      <AboutSection about={about} locale={locale} />
-      <ExperienceSection experiences={normalizedExperiences} locale={locale} />
+    <main className="min-h-screen bg-gradient-to-br from-stone-100 via-neutral-50 to-stone-200 pt-30">
+      <div className="space-y-10">
+        <HeroSection hero={hero} locale={locale} />
+        <AboutSection about={about} locale={locale} />
+        <ExperienceSection experiences={normalizedExperiences} locale={locale} />
+      </div>
     </main>
   );
 }
