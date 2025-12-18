@@ -7,7 +7,7 @@ export const getAbout = async () => {
 };
 
 export const updateAbout = async (payload: {
-  profile?: string;
+  profileFile?: string;
   translations: Array<{ locale: "EN" | "ID"; title: string; content: string }>;
 }) => {
   return apiFetch<About>("/cms/about", {

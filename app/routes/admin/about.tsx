@@ -13,6 +13,15 @@ type ActionData = { error?: string; about?: About };
 const pick = (about: About, locale: Locale) =>
   about.translations.find((t) => t.locale === locale) ?? { locale, title: "", content: "" };
 
+const fileToDataUrl = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
 export const clientLoader: ClientLoaderFunction = async () => {
   const about = await getAbout();
   return { about };
@@ -20,8 +29,14 @@ export const clientLoader: ClientLoaderFunction = async () => {
 
 export const clientAction: ClientActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  const profile = String(formData.get("profile") ?? "").trim();
   const profileFile = formData.get("profileFile");
+
+  console.log("[About] FormData entries:", Array.from(formData.entries()).map(([k, v]) => 
+    [k, v instanceof File ? `File: ${v.name}, ${v.size}b, ${v.type}` : v]
+  ));
+  console.log("[About] profileFile raw:", profileFile);
+  console.log("[About] profileFile instanceof File:", profileFile instanceof File);
+  console.log("[About] profileFile?.constructor.name:", profileFile?.constructor?.name);
 
   const titleEn = String(formData.get("title_en") ?? "").trim();
   const contentEn = String(formData.get("content_en") ?? "").trim();
@@ -33,15 +48,28 @@ export const clientAction: ClientActionFunction = async ({ request }) => {
   }
 
   try {
-    let profileUrl = profile || undefined;
+    let profileFileDataUrl: string | undefined;
 
+    // Convert file to base64 data URL if uploaded
     if (profileFile instanceof File && profileFile.size > 0) {
-      const { url } = await uploadAboutProfile(profileFile);
-      profileUrl = url;
+      console.log("[About] Converting file:", {
+        name: profileFile.name,
+        size: profileFile.size,
+        type: profileFile.type,
+      });
+      profileFileDataUrl = await fileToDataUrl(profileFile);
+      console.log("[About] Converted to data URL:", profileFileDataUrl.substring(0, 100));
+    } else {
+      console.log("[About] No file to upload, profileFile:", profileFile);
     }
 
+    console.log("[About] Sending payload:", {
+      hasProfileFile: !!profileFileDataUrl,
+      profileFileLength: profileFileDataUrl?.length,
+    });
+
     const updated = await updateAbout({
-      profile: profileUrl,
+      profileFile: profileFileDataUrl,
       translations: [
         { locale: "EN", title: titleEn, content: contentEn },
         { locale: "ID", title: titleId, content: contentId },
@@ -118,7 +146,7 @@ export default function AboutPage() {
           ) : null}
         </div>
 
-        <Form method="post" className="lg:col-span-2 grid gap-6">
+        <Form method="post" encType="multipart/form-data" className="lg:col-span-2 grid gap-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Profile Image</label>
             <Input type="file" name="profileFile" accept="image/*" />
