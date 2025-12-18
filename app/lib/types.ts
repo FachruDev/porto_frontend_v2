@@ -102,3 +102,56 @@ export type Certificate = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ProjectTranslation = {
+  id?: number;
+  locale: Locale;
+  title: string;
+  subtitle?: string | null;
+  description?: string | null;
+  projectId?: number;
+};
+
+export type ProjectImage = {
+  id: number;
+  url: string;
+  alt?: string | null;
+  sortOrder: number;
+  projectId: number;
+};
+
+export type Project = {
+  id: number;
+  slug: string;
+  sortOrder: number;
+  images: ProjectImage[];
+  translations: ProjectTranslation[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SocialMedia = {
+  id: number;
+  logo?: string | null;
+  link: string;
+  title: string;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type BlogCategoryTranslation = {
+  id?: number;
+  locale: Locale;
+  title: string;
+  blogCategoryId?: number;
+};
+
+export type BlogCategory = {
+  id: number;
+  slug: string;
+  sortOrder: number;
+  translations: BlogCategoryTranslation[];
+  createdAt: string;
+  updatedAt: string;
+};
