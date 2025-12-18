@@ -168,12 +168,17 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   navMain?: NavItem[]
   navSecondary?: typeof data.navSecondary
   projects?: typeof data.projects
-  user?: typeof data.user
+  user?: {
+    name?: string | null
+    email?: string | null
+    avatar?: string | null
+  }
   brand?: {
     name: string
     subtitle?: string
     href?: string
   }
+  onLogout?: () => void
 }
 
 export function AppSidebar({
@@ -182,6 +187,7 @@ export function AppSidebar({
   projects = data.projects,
   user = data.user,
   brand = { name: "Acme Inc", subtitle: "Enterprise", href: "#" },
+  onLogout,
   ...props
 }: AppSidebarProps) {
   return (
@@ -211,7 +217,7 @@ export function AppSidebar({
         {navSecondary?.length ? <NavSecondary items={navSecondary} className="mt-auto" /> : null}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user} onLogout={onLogout} />
       </SidebarFooter>
     </Sidebar>
   )

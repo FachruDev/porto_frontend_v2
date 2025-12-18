@@ -9,6 +9,11 @@ import type { BlogPost, Locale } from "~/lib/types";
 const pick = (post: BlogPost, locale: Locale) =>
   post.translations.find((t) => t.locale === locale) ?? { locale, title: "" };
 
+const categoryLabel = (post: BlogPost) =>
+  post.blogCategory?.translations?.find((t) => t.locale === "EN")?.title ??
+  post.blogCategory?.slug ??
+  post.blogCategoryId;
+
 export const clientLoader: ClientLoaderFunction = async () => {
   try {
     const posts = await listBlogPosts();
@@ -60,11 +65,11 @@ export default function BlogPostsPage() {
         <table className="min-w-full divide-y divide-border">
           <thead className="bg-muted/40">
             <tr>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground">Preview</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground">Status</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground">Slug</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground">Title (EN)</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground">Title (ID)</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground">Category ID</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground">Category</th>
               <th className="px-4 py-3 text-right text-xs font-semibold text-muted-foreground">Actions</th>
             </tr>
           </thead>
@@ -72,13 +77,24 @@ export default function BlogPostsPage() {
             {posts.map((post) => {
               const en = pick(post, "EN");
               const id = pick(post, "ID");
+              const cat = categoryLabel(post);
               return (
                 <tr key={post.id} className="hover:bg-muted/30">
+                  <td className="px-4 py-3 text-sm">
+                    {post.featuredImage ? (
+                      <img
+                        src={post.featuredImage}
+                        alt={en.title || "featured"}
+                        className="h-10 w-16 rounded object-cover border"
+                      />
+                    ) : (
+                      <span className="text-xs text-muted-foreground">No image</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-sm">{post.status}</td>
-                  <td className="px-4 py-3 text-sm font-mono text-muted-foreground">{post.slug}</td>
                   <td className="px-4 py-3 text-sm">{en.title}</td>
                   <td className="px-4 py-3 text-sm">{id.title}</td>
-                  <td className="px-4 py-3 text-sm">{post.blogCategoryId}</td>
+                  <td className="px-4 py-3 text-sm">{cat}</td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Button asChild size="sm" variant="outline">

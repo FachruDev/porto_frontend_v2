@@ -1,4 +1,4 @@
-import { FileText, LayoutDashboard, LogOut, ShieldCheck, Sparkles, Settings, Phone } from "lucide-react";
+import { FileText, LayoutDashboard, LogOut, ShieldCheck, Sparkles, Settings, Phone, UserRound } from "lucide-react";
 import { Folder, Share2, Grid } from "lucide-react";
 import { Newspaper } from "lucide-react";
 import type { ClientLoaderFunction } from "react-router";
@@ -10,7 +10,7 @@ import { Button } from "~/components/ui/button";
 import { ModeToggle } from "~/components/mode-toggle";
 import { Separator } from "~/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
-import { clearToken, isAuthenticated } from "~/lib/auth";
+import { clearToken, getUser, isAuthenticated } from "~/lib/auth";
 import { ThemeProvider } from "~/components/theme-provider";
 
 export const clientLoader: ClientLoaderFunction = async () => {
@@ -81,6 +81,11 @@ const adminNav = [
     url: "/admin/blog",
     icon: Newspaper,
   },
+  {
+    title: "Profile",
+    url: "/admin/profile",
+    icon: UserRound,
+  },
 ];
 
 export default function AdminLayout() {
@@ -97,13 +102,14 @@ export default function AdminLayout() {
     clearToken();
     navigate("/admin/login", { replace: true });
   };
+  const user = getUser() ?? undefined;
 
   const currentPage = adminNav.find((item) => location.pathname.startsWith(item.url));
 
   return (
     <ThemeProvider storageKey="admin-ui-theme" defaultTheme="light">
       <SidebarProvider>
-        <AppSidebar navMain={adminNav} brand={brand} />
+        <AppSidebar navMain={adminNav} brand={brand} user={user ?? undefined} onLogout={onLogout} />
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />

@@ -167,6 +167,11 @@ export type BlogPostTranslation = {
 export type BlogPost = {
   id: number;
   blogCategoryId: number;
+  blogCategory?: {
+    id: number;
+    slug: string;
+    translations: BlogCategoryTranslation[];
+  };
   authorId: number;
   slug: string;
   metaTitle?: string | null;
