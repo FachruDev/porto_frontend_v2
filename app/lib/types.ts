@@ -155,3 +155,27 @@ export type BlogCategory = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type BlogPostTranslation = {
+  id?: number;
+  locale: Locale;
+  title: string;
+  content: string;
+  blogPostId?: number;
+};
+
+export type BlogPost = {
+  id: number;
+  blogCategoryId: number;
+  authorId: number;
+  slug: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  featuredImage?: string | null;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  publishedAt?: string | null;
+  createdBy?: string | null;
+  translations: BlogPostTranslation[];
+  createdAt: string;
+  updatedAt: string;
+};

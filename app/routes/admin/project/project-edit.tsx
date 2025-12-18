@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { ClientActionFunction, ClientLoaderFunction } from "react-router";
 import { Form, Link, redirect, useActionData, useLoaderData, useNavigation } from "react-router";
 
@@ -104,6 +105,26 @@ export default function ProjectEdit() {
   const project = actionData?.project ?? loaderProject;
   const en = pick(project, "EN");
   const id = pick(project, "ID");
+  const [slug, setSlug] = useState(project.slug ?? "");
+  const [slugTouched, setSlugTouched] = useState(false);
+
+  const slugify = (value: string) =>
+    value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+
+  const handleSlugChange = (value: string) => {
+    setSlug(value);
+    setSlugTouched(true);
+  };
+
+  const syncSlugFromTitle = (title: string) => {
+    if (!slugTouched || slug.trim() === "") {
+      setSlug(slugify(title));
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -149,7 +170,11 @@ export default function ProjectEdit() {
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Slug</label>
-                <Input name="slug" defaultValue={project.slug} />
+                <Input
+                  name="slug"
+                  value={slug}
+                  onChange={(e) => handleSlugChange(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Order</label>
@@ -162,7 +187,12 @@ export default function ProjectEdit() {
                 <legend className="px-2 text-sm font-semibold text-muted-foreground">English (EN)</legend>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Title</label>
-                  <Input name="title_en" defaultValue={en.title} required />
+                  <Input
+                    name="title_en"
+                    defaultValue={en.title}
+                    required
+                    onChange={(e) => syncSlugFromTitle(e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Subtitle</label>

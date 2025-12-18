@@ -4,7 +4,7 @@ import { Form, redirect, useActionData, useNavigation } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { apiFetch } from "~/lib/api";
-import { isAuthenticated, setToken } from "~/lib/auth";
+import { isAuthenticated, setToken, setUser } from "~/lib/auth";
 
 type ActionError = { error?: string };
 
@@ -25,10 +25,11 @@ export const clientAction: ClientActionFunction = async ({ request }) => {
   }
 
   try {
-    const result = await apiFetch<{ token: string }>("/auth/login", {
+    const result = await apiFetch<{ token: string; user: { id: number; name?: string; email: string; bio?: string; profile?: string | null } }>("/auth/login", {
       method: "POST",
       body: { email, password },
     });
+    setUser(result.user);
     setToken(result.token);
     throw redirect("/admin/heroes");
   } catch (error) {

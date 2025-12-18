@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { ClientActionFunction } from "react-router";
 import { Form, Link, redirect, useActionData, useNavigation } from "react-router";
 
@@ -36,9 +37,29 @@ export const clientAction: ClientActionFunction = async ({ request }) => {
 };
 
 export default function BlogCategoryNew() {
+  const [slug, setSlug] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
   const actionData = useActionData<ActionData>();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+
+  const slugify = (value: string) =>
+    value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+
+  const handleSlugChange = (value: string) => {
+    setSlug(value);
+    setSlugTouched(true);
+  };
+
+  const syncSlugFromTitle = (title: string) => {
+    if (!slugTouched || slug.trim() === "") {
+      setSlug(slugify(title));
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -58,7 +79,12 @@ export default function BlogCategoryNew() {
         <div className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Slug (opsional)</label>
-            <Input name="slug" placeholder="auto-from-title" />
+            <Input
+              name="slug"
+              value={slug}
+              onChange={(e) => handleSlugChange(e.target.value)}
+              placeholder="auto-from-title"
+            />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Order</label>
@@ -69,7 +95,12 @@ export default function BlogCategoryNew() {
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Title (EN)</label>
-            <Input name="title_en" placeholder="Category title" required />
+            <Input
+              name="title_en"
+              placeholder="Category title"
+              required
+              onChange={(e) => syncSlugFromTitle(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Judul (ID)</label>

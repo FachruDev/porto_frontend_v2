@@ -27,5 +27,8 @@ export default [
     route("blog-category", "routes/admin/blog-category/categories.tsx"),
     route("blog-category/new", "routes/admin/blog-category/category-new.tsx"),
     route("blog-category/:id", "routes/admin/blog-category/category-edit.tsx"),
+    route("blog", "routes/admin/blog/posts.tsx"),
+    route("blog/new", "routes/admin/blog/post-new.tsx"),
+    route("blog/:id", "routes/admin/blog/post-edit.tsx"),
   ]),
 ] satisfies RouteConfig;

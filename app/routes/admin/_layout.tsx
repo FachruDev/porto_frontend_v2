@@ -1,5 +1,6 @@
 import { FileText, LayoutDashboard, LogOut, ShieldCheck, Sparkles, Settings, Phone } from "lucide-react";
 import { Folder, Share2, Grid } from "lucide-react";
+import { Newspaper } from "lucide-react";
 import type { ClientLoaderFunction } from "react-router";
 import { Outlet, redirect, useLocation, useNavigate } from "react-router";
 
@@ -74,6 +75,11 @@ const adminNav = [
     title: "Blog Categories",
     url: "/admin/blog-category",
     icon: Grid,
+  },
+  {
+    title: "Blog Posts",
+    url: "/admin/blog",
+    icon: Newspaper,
   },
 ];
 
