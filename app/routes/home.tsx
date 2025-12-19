@@ -3,8 +3,16 @@ import type { ClientLoaderFunction } from "react-router";
 import { useLoaderData } from "react-router";
 import { useState } from "react";
 
-import { getLandingAbout, getLandingHero, getLandingWebConfig, listLandingExperiences } from "~/lib/landing";
-import type { About, Experience, Hero, WebConfig } from "~/lib/types";
+import {
+  getLandingAbout,
+  getLandingHero,
+  getLandingWebConfig,
+  listLandingCertificates,
+  listLandingExperiences,
+  listLandingProjects,
+  listLandingSkills,
+} from "~/lib/landing";
+import type { About, Certificate, Experience, Hero, Project, Skill, WebConfig } from "~/lib/types";
 import LandingPage from "~/routes/landing/page";
 import { Navbar } from "~/components/landing/Navbar";
 
@@ -12,6 +20,9 @@ type LoaderData = {
   hero: Hero | null;
   about: About | null;
   experiences: Experience[];
+  skills: Skill[];
+  projects: Project[];
+  certificates: Certificate[];
   webConfig: WebConfig | null;
 };
 
@@ -28,11 +39,17 @@ export const clientLoader: ClientLoaderFunction = async () => {
     hero,
     about,
     experiences,
+    skills,
+    projects,
+    certificates,
     webConfig,
   ] = await Promise.all([
     safe<Hero | null>(null, getLandingHero),
     safe<About | null>(null, getLandingAbout),
     safe<Experience[]>([], listLandingExperiences),
+    safe<Skill[]>([], listLandingSkills),
+    safe<Project[]>([], listLandingProjects),
+    safe<Certificate[]>([], listLandingCertificates),
     safe<WebConfig | null>(null, getLandingWebConfig),
   ]);
 
@@ -40,6 +57,9 @@ export const clientLoader: ClientLoaderFunction = async () => {
     hero,
     about,
     experiences,
+    skills,
+    projects,
+    certificates,
     webConfig,
   };
 };
