@@ -11,8 +11,20 @@ import {
   listLandingExperiences,
   listLandingProjects,
   listLandingSkills,
+  listLandingSocials,
+  getLandingContactInfo,
 } from "~/lib/landing";
-import type { About, Certificate, Experience, Hero, Project, Skill, WebConfig } from "~/lib/types";
+import type {
+  About,
+  Certificate,
+  ContactInformation,
+  Experience,
+  Hero,
+  Project,
+  Skill,
+  SocialMedia,
+  WebConfig,
+} from "~/lib/types";
 import LandingPage from "~/routes/landing/page";
 import { Navbar } from "~/components/landing/Navbar";
 
@@ -23,6 +35,8 @@ type LoaderData = {
   skills: Skill[];
   projects: Project[];
   certificates: Certificate[];
+  socials: SocialMedia[];
+  contact: ContactInformation | null;
   webConfig: WebConfig | null;
 };
 
@@ -42,6 +56,8 @@ export const clientLoader: ClientLoaderFunction = async () => {
     skills,
     projects,
     certificates,
+    socials,
+    contact,
     webConfig,
   ] = await Promise.all([
     safe<Hero | null>(null, getLandingHero),
@@ -50,6 +66,8 @@ export const clientLoader: ClientLoaderFunction = async () => {
     safe<Skill[]>([], listLandingSkills),
     safe<Project[]>([], listLandingProjects),
     safe<Certificate[]>([], listLandingCertificates),
+    safe<SocialMedia[]>([], listLandingSocials),
+    safe<ContactInformation | null>(null, getLandingContactInfo),
     safe<WebConfig | null>(null, getLandingWebConfig),
   ]);
 
@@ -60,6 +78,8 @@ export const clientLoader: ClientLoaderFunction = async () => {
     skills,
     projects,
     certificates,
+    socials,
+    contact,
     webConfig,
   };
 };

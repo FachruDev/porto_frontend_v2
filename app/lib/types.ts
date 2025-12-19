@@ -53,6 +53,15 @@ export type ContactInformation = {
   updatedAt: string;
 };
 
+export type ContactForm = {
+  id: number;
+  name: string;
+  email: string;
+  subject?: string | null;
+  description: string;
+  createdAt: string;
+};
+
 export type ExperienceTranslation = {
   id?: number;
   locale: Locale;

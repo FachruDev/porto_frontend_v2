@@ -1,4 +1,4 @@
-import { FileText, LayoutDashboard, LogOut, ShieldCheck, Sparkles, Settings, Phone, UserRound } from "lucide-react";
+import { FileText, LayoutDashboard, LogOut, ShieldCheck, Sparkles, Settings, Phone, UserRound, Mail } from "lucide-react";
 import { Folder, Share2, Grid } from "lucide-react";
 import { Newspaper } from "lucide-react";
 import type { ClientLoaderFunction } from "react-router";
@@ -80,6 +80,11 @@ const adminNav = [
     title: "Blog Posts",
     url: "/admin/blog",
     icon: Newspaper,
+  },
+  {
+    title: "Contact Forms",
+    url: "/admin/contact-forms",
+    icon: Mail,
   },
   {
     title: "Profile",

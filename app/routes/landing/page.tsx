@@ -1,12 +1,24 @@
 import { useEffect } from "react";
 import "aos/dist/aos.css";
-import type { About, Certificate, Experience, Hero, Project, Skill } from "~/lib/types";
+import type {
+  About,
+  Certificate,
+  ContactInformation,
+  Experience,
+  Hero,
+  Project,
+  Skill,
+  SocialMedia,
+  WebConfig,
+} from "~/lib/types";
 import { HeroSection } from "~/components/landing/hero/HeroSection";
 import { AboutSection } from "~/components/landing/about/AboutSection";
 import { ExperienceSection } from "~/components/landing/experience/ExperienceSection";
 import { SkillsSection } from "~/components/landing/skills/SkillsSection";
 import { ProjectSection } from "~/components/landing/project/ProjectSection";
 import { CertificateSection } from "~/components/landing/certificate/CertificateSection";
+import { ContactSection } from "~/components/landing/contact/ContactSection";
+import { Footer } from "~/components/landing/Footer";
 
 type Props = {
   hero: Hero | null;
@@ -15,6 +27,9 @@ type Props = {
   skills: Skill[];
   projects: Project[];
   certificates: Certificate[];
+  socials: SocialMedia[];
+  contact: ContactInformation | null;
+  webConfig: WebConfig | null;
   locale: "EN" | "ID";
 };
 
@@ -25,12 +40,16 @@ export default function LandingPage({
   skills,
   projects,
   certificates,
+  socials,
+  contact,
+  webConfig,
   locale,
 }: Props) {
   const normalizedExperiences = Array.isArray(experiences) ? experiences : [];
   const normalizedSkills = Array.isArray(skills) ? skills : [];
   const normalizedProjects = Array.isArray(projects) ? projects : [];
   const normalizedCertificates = Array.isArray(certificates) ? certificates : [];
+  const normalizedSocials = Array.isArray(socials) ? socials : [];
 
   useEffect(() => {
     import("aos").then((mod) => {
@@ -51,6 +70,8 @@ export default function LandingPage({
         <SkillsSection skills={normalizedSkills} />
         <ProjectSection projects={normalizedProjects} locale={locale} />
         <CertificateSection certificates={normalizedCertificates} locale={locale} />
+        <ContactSection info={contact} />
+        <Footer contact={contact} socials={normalizedSocials} webConfig={webConfig} />
       </div>
     </main>
   );

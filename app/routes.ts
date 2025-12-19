@@ -31,5 +31,6 @@ export default [
     route("blog/new", "routes/admin/blog/post-new.tsx"),
     route("blog/:id", "routes/admin/blog/post-edit.tsx"),
     route("profile", "routes/admin/profile.tsx"),
+    route("contact-forms", "routes/admin/contact-forms.tsx"),
   ]),
 ] satisfies RouteConfig;
