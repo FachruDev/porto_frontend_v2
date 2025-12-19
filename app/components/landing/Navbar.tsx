@@ -4,11 +4,11 @@ import { useEffect, useState } from "react"
 import { LanguageToggle } from "./LanguageToggle"
 
 const links = [
-  { label: "Home", href: "#" },
-  { label: "About", href: "#about" },
-  { label: "Work", href: "#work" },
-  { label: "Journal", href: "#journal" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "#", labelId: "Beranda" },
+  { label: "About", href: "#about", labelId: "Tentang" },
+  { label: "Work", href: "#work", labelId: "Karya" },
+  { label: "Journal", href: "#journal", labelId: "Jurnal" },
+  { label: "Contact", href: "#contact", labelId: "Kontak" },
 ]
 
 type Props = {
@@ -23,7 +23,6 @@ export function Navbar({ locale = "EN", onLocaleChange }: Props) {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
-
       if (currentScrollY < 10) {
         setIsVisible(true)
       } else if (currentScrollY > lastScrollY) {
@@ -31,7 +30,6 @@ export function Navbar({ locale = "EN", onLocaleChange }: Props) {
       } else {
         setIsVisible(true)
       }
-
       setLastScrollY(currentScrollY)
     }
 
@@ -41,64 +39,57 @@ export function Navbar({ locale = "EN", onLocaleChange }: Props) {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 transition-transform duration-700 ease-in-out ${
-        isVisible ? "translate-y-0" : "-translate-y-full"
+      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ease-in-out ${
+        isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
       }`}
     >
-      <div className="relative px-4 py-4 md:px-6">
-        <nav className="relative mx-auto max-w-7xl rounded-full border border-stone-800/20 bg-white/95 shadow-xl backdrop-blur-md">
-          {/* Natural texture overlay */}
-          <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-stone-100/50 via-transparent to-stone-50/30" />
+      <div className="mx-auto max-w-7xl px-4 py-6 md:px-6">
+        <nav className="relative flex items-center justify-between rounded-full border border-stone-200/60 bg-white/70 px-4 py-4 shadow-sm backdrop-blur-xl md:px-6">
           
-          <div className="relative flex items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-4">
-            {/* Logo - minimalist Nordic style */}
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-stone-300 bg-stone-900 shadow-sm md:h-10 md:w-10">
-                <svg className="h-5 w-5 text-stone-100 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m9-9H3" />
-                </svg>
-              </div>
-              <div className="hidden sm:block">
-                <p className="text-sm font-medium tracking-wide text-stone-900 md:text-base">Portfolio</p>
-              </div>
+          {/* Logo Section */}
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-orange-400 to-rose-400 shadow-sm md:h-9 md:w-9">
+              <span className="text-xs font-bold text-white">P</span>
             </div>
+            <span className="text-sm font-bold tracking-tighter text-stone-800 md:text-base">
+              PORTFOLIO.
+            </span>
+          </div>
 
-            {/* Navigation - clean & minimal */}
-            <div className="hidden items-center gap-1 md:gap-2 lg:flex">
-              {links.map((link) => (
-                <button
-                  key={link.label}
-                  className="group relative px-3 py-2 text-sm font-medium text-stone-700 transition-colors hover:text-stone-900 md:px-4"
-                  type="button"
-                >
-                  <span className="relative">{link.label}</span>
-                  <span className="absolute bottom-0 left-1/2 h-px w-0 -translate-x-1/2 bg-stone-900 transition-all duration-300 group-hover:w-3/4" />
-                </button>
-              ))}
-            </div>
-
-            {/* Right section */}
-            <div className="flex items-center gap-2 md:gap-3">
-              <LanguageToggle locale={locale} onChange={onLocaleChange} />
-              
-              {/* CTA - simple & organic */}
-              <button
-                type="button"
-                className="hidden rounded-lg border border-stone-900 bg-stone-900 px-4 py-2 text-sm font-medium text-stone-50 transition-all hover:bg-stone-800 sm:block"
+          {/* Navigation - Typography Konsisten (Tracking Tight) */}
+          <div className="hidden items-center gap-1 lg:flex">
+            {links.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="group relative px-4 py-2 text-sm font-semibold tracking-tight text-stone-500 transition-colors hover:text-orange-500"
               >
-                Get in Touch
-              </button>
+                {locale === "EN" ? link.label : link.labelId}
+                <span className="absolute bottom-2 left-1/2 h-0.75 w-0 -translate-x-1/2 rounded-full bg-orange-400/40 transition-all duration-300 group-hover:w-1/2" />
+              </a>
+            ))}
+          </div>
 
-              {/* Mobile menu */}
-              <button
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-stone-300 bg-stone-50 text-stone-900 transition-colors hover:bg-stone-100 lg:hidden"
-                type="button"
-              >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
+          {/* Right Section */}
+          <div className="flex items-center gap-3">
+            <LanguageToggle locale={locale} onChange={onLocaleChange} />
+            
+            <button
+              type="button"
+              className="hidden rounded-full bg-linear-to-br from-orange-400 to-rose-400 px-5 py-2 text-xs font-bold tracking-widest text-white uppercase transition-all hover:shadow-lg hover:shadow-orange-500/20 active:scale-95 sm:block"
+            >
+              {locale === "EN" ? "Let's Talk" : "Kontak Kami"}
+            </button>
+
+            {/* Mobile Burger - Simplified */}
+            <button
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 lg:hidden"
+              type="button"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 8h16M4 16h16" />
+              </svg>
+            </button>
           </div>
         </nav>
       </div>

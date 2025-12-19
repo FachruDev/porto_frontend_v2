@@ -20,29 +20,21 @@ export function LanguageToggle({ onChange, locale: controlled = "EN" }: Props) {
   }
 
   return (
-    <div className="flex items-center gap-0.5 rounded-lg border border-stone-300 bg-stone-50 p-0.5 text-xs backdrop-blur-sm">
-      <button
-        type="button"
-        onClick={() => handle("EN")}
-        className={`rounded-md px-2.5 py-1 font-medium transition-all duration-200 md:px-3 md:py-1.5 ${
-          locale === "EN"
-            ? "bg-stone-900 text-stone-50 shadow-sm"
-            : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
-        }`}
-      >
-        EN
-      </button>
-      <button
-        type="button"
-        onClick={() => handle("ID")}
-        className={`rounded-md px-2.5 py-1 font-medium transition-all duration-200 md:px-3 md:py-1.5 ${
-          locale === "ID"
-            ? "bg-stone-900 text-stone-50 shadow-sm"
-            : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
-        }`}
-      >
-        ID
-      </button>
+    <div className="flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50/50 p-1">
+      {(["EN", "ID"] as const).map((lang) => (
+        <button
+          key={lang}
+          type="button"
+          onClick={() => handle(lang)}
+          className={`relative rounded-full px-3 py-1 text-[10px] font-black tracking-tighter transition-all duration-300 ${
+            locale === lang
+              ? "bg-white text-orange-500 shadow-sm"
+              : "text-stone-400 hover:text-stone-600"
+          }`}
+        >
+          {lang}
+        </button>
+      ))}
     </div>
   )
 }
