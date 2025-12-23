@@ -14,18 +14,7 @@ export function HeroSection({ hero, locale }: { hero: Hero | null; locale: "EN" 
     : "Membangun pengalaman digital yang indah dengan teknologi modern.");
 
   return (
-    <section className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#fafafa] px-6 py-20">
-      
-      {/* --- BACKGROUND LAYER (0% LAG) --- */}
-      {/* 1. Base Gradient Layer */}
-      <div className="absolute inset-0 z-0 bg-linear-to-tr from-orange-50/50 via-white to-blue-50/50" />
-      
-      {/* 2. Micro-Grid Pattern (Bikin kesan 'pro' dan gak sepi, tapi sangat ringan) */}
-      <div className="absolute inset-0 z-1 opacity-[0.05] bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[30px_30px]" />
-
-      {/* 3. Floating Shapes (Tanpa Blur, hanya opacity pastel) */}
-      <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-orange-100/40 mix-blend-multiply" />
-      <div className="absolute top-1/2 -right-24 h-125 w-125 rounded-full bg-blue-100/30 mix-blend-multiply" />
+    <section className="relative flex min-h-screen w-full items-center justify-center overflow-hidden px-6 py-20">
 
       {/* --- CONTENT LAYER --- */}
       <div className="relative z-10 mx-auto max-w-7xl">
