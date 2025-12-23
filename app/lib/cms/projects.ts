@@ -22,6 +22,7 @@ export const updateProject = (
   payload: Partial<{
     slug: string;
     order?: number;
+    images?: Array<{ id: number; sortOrder: number }>;
     translations: Array<{ locale: "EN" | "ID"; title: string; subtitle?: string; description?: string }>;
   }>,
 ) =>

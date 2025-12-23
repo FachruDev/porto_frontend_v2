@@ -7,7 +7,6 @@ import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import {
-  addProjectImage,
   deleteProject,
   deleteProjectImage,
   getProject,
@@ -44,22 +43,22 @@ export const clientAction: ClientActionFunction = async ({ request, params }) =>
       return { project: { ...project, images } };
     }
 
-    if (intent === "addImageUrl") {
-      const url = String(formData.get("url") ?? "").trim();
-      const alt = String(formData.get("alt") ?? "").trim();
-      const order = Number(formData.get("order") ?? "0");
-      if (!url) return { error: "URL gambar wajib diisi." };
-      await addProjectImage(id, { url, alt: alt || undefined, order: Number.isNaN(order) ? 0 : order });
-      const project = await getProject(id);
-      return { project };
-    }
-
     if (intent === "deleteImage") {
       const imageId = Number(formData.get("imageId"));
       if (imageId) {
         await deleteProjectImage(id, imageId);
       }
       const project = await getProject(id);
+      return { project };
+    }
+
+    if (intent === "updateImageOrder") {
+      const ids = formData.getAll("imageId").map((v) => Number(v));
+      const orders = formData.getAll("imageOrder").map((v) => Number(v));
+      const images = ids
+        .map((id, idx) => ({ id, sortOrder: Number.isNaN(orders[idx]) ? 0 : orders[idx] }))
+        .filter((img) => img.id);
+      const project = await updateProject(id, { images });
       return { project };
     }
 
@@ -250,67 +249,55 @@ export default function ProjectEdit() {
 
           <div className="rounded-xl border p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-semibold">Tambah Gambar via URL</h3>
-              </div>
-            </div>
-            <Form method="post" className="grid gap-4 md:grid-cols-3">
-              <input type="hidden" name="intent" value="addImageUrl" />
-              <div className="space-y-2 md:col-span-2">
-                <label className="text-sm font-medium text-foreground">Image URL</label>
-                <Input name="url" placeholder="https://..." />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Order</label>
-                <Input name="order" type="number" min={0} defaultValue={project.images.length} />
-              </div>
-              <div className="space-y-2 md:col-span-3">
-                <label className="text-sm font-medium text-foreground">Alt</label>
-                <Input name="alt" placeholder="Alt text" />
-              </div>
-              <div className="md:col-span-3 flex justify-end">
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Menyimpan..." : "Tambah"}
-                </Button>
-              </div>
-            </Form>
-          </div>
-
-          <div className="rounded-xl border p-4 space-y-4">
-            <div className="flex items-center justify-between">
               <h3 className="text-base font-semibold">Daftar Gambar</h3>
               <p className="text-xs text-muted-foreground">{project.images.length} file</p>
             </div>
-            <div className="grid gap-3 md:grid-cols-3">
-              {project.images.map((img: ProjectImage) => (
-                <div key={img.id} className="rounded-lg border p-2 space-y-2">
-                  <img src={img.url} alt={img.alt ?? ""} className="h-24 w-full rounded object-cover" />
-                  <p className="text-xs text-muted-foreground break-all">{img.url}</p>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Order: {img.sortOrder}</span>
+            <Form method="post" className="space-y-4">
+              <input type="hidden" name="intent" value="updateImageOrder" />
+              <div className="grid gap-3 md:grid-cols-3">
+                {project.images.map((img: ProjectImage) => (
+                  <div key={img.id} className="rounded-lg border p-2 space-y-2">
+                    <img src={img.url} alt={img.alt ?? ""} className="h-24 w-full rounded object-cover" />
+                    <p className="text-xs text-muted-foreground break-all">{img.url}</p>
+                    <div className="space-y-1">
+                      <label className="text-xs text-muted-foreground">Order</label>
+                      <input
+                        type="hidden"
+                        name="imageId"
+                        value={img.id}
+                      />
+                      <Input name="imageOrder" type="number" min={0} defaultValue={img.sortOrder} />
+                    </div>
+                    <Form method="post">
+                      <input type="hidden" name="intent" value="deleteImage" />
+                      <input type="hidden" name="imageId" value={img.id} />
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        type="submit"
+                        disabled={isSubmitting}
+                        onClick={(e) => {
+                          if (!confirm("Hapus gambar ini?")) e.preventDefault();
+                        }}
+                        className="w-full"
+                      >
+                        Hapus
+                      </Button>
+                    </Form>
                   </div>
-                  <Form method="post">
-                    <input type="hidden" name="intent" value="deleteImage" />
-                    <input type="hidden" name="imageId" value={img.id} />
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      type="submit"
-                      disabled={isSubmitting}
-                      onClick={(e) => {
-                        if (!confirm("Hapus gambar ini?")) e.preventDefault();
-                      }}
-                      className="w-full"
-                    >
-                      Hapus
-                    </Button>
-                  </Form>
+                ))}
+                {project.images.length === 0 ? (
+                  <p className="text-sm text-muted-foreground md:col-span-3">Belum ada gambar.</p>
+                ) : null}
+              </div>
+              {project.images.length ? (
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Menyimpan..." : "Simpan urutan"}
+                  </Button>
                 </div>
-              ))}
-              {project.images.length === 0 ? (
-                <p className="text-sm text-muted-foreground md:col-span-3">Belum ada gambar.</p>
               ) : null}
-            </div>
+            </Form>
           </div>
         </div>
       </div>
