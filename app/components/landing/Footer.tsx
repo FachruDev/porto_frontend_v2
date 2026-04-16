@@ -29,7 +29,7 @@ export function Footer({ contact, socials, webConfig }: Props) {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        
+            
         {/* --- 2. TOP SECTION: BIG CALL TO ACTION --- */}
         <div className="grid gap-16 border-b border-stone-800 pb-20 lg:grid-cols-[1.5fr,1fr]">
           <div data-aos="fade-right">
