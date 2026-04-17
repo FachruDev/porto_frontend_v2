@@ -1,14 +1,15 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Link, useLocation } from "react-router"
 import { LanguageToggle } from "./LanguageToggle"
 
 const links = [
-  { label: "Home", href: "#", labelId: "Beranda" },
-  { label: "About", href: "#about", labelId: "Tentang" },
-  { label: "Work", href: "#work", labelId: "Karya" },
-  { label: "Journal", href: "#journal", labelId: "Jurnal" },
-  { label: "Contact", href: "#contact", labelId: "Kontak" },
+  { label: "Home", to: "/", labelId: "Beranda" },
+  { label: "About", to: "/about", labelId: "Tentang" },
+  { label: "Work", to: "/work", labelId: "Karya" },
+  { label: "Journal", to: "/journal", labelId: "Jurnal" },
+  { label: "Contact", to: "/contact", labelId: "Kontak" },
 ]
 
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
 }
 
 export function Navbar({ locale = "EN", onLocaleChange }: Props) {
+  const location = useLocation()
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
 
@@ -47,26 +49,32 @@ export function Navbar({ locale = "EN", onLocaleChange }: Props) {
         <nav className="relative flex items-center justify-between rounded-full border border-stone-200/60 bg-white/70 px-4 py-4 shadow-sm backdrop-blur-xl md:px-6">
           
           {/* Logo Section */}
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-orange-400 to-rose-400 shadow-sm md:h-9 md:w-9">
               <span className="text-xs font-bold text-white">P</span>
             </div>
             <span className="text-sm font-bold tracking-tighter text-stone-800 md:text-base">
               PORTFOLIO.
             </span>
-          </div>
+          </Link>
 
           {/* Navigation - Typography Konsisten (Tracking Tight) */}
           <div className="hidden items-center gap-1 lg:flex">
             {links.map((link) => (
-              <a
+              <Link
                 key={link.label}
-                href={link.href}
-                className="group relative px-4 py-2 text-sm font-semibold tracking-tight text-stone-500 transition-colors hover:text-orange-500"
+                to={link.to}
+                className={`group relative px-4 py-2 text-sm font-semibold tracking-tight transition-colors ${
+                  location.pathname === link.to ? "text-orange-500" : "text-stone-500 hover:text-orange-500"
+                }`}
               >
                 {locale === "EN" ? link.label : link.labelId}
-                <span className="absolute bottom-2 left-1/2 h-0.75 w-0 -translate-x-1/2 rounded-full bg-orange-400/40 transition-all duration-300 group-hover:w-1/2" />
-              </a>
+                <span
+                  className={`absolute bottom-2 left-1/2 h-0.75 -translate-x-1/2 rounded-full bg-orange-400/40 transition-all duration-300 ${
+                    location.pathname === link.to ? "w-1/2" : "w-0 group-hover:w-1/2"
+                  }`}
+                />
+              </Link>
             ))}
           </div>
 
@@ -74,12 +82,12 @@ export function Navbar({ locale = "EN", onLocaleChange }: Props) {
           <div className="flex items-center gap-3">
             <LanguageToggle locale={locale} onChange={onLocaleChange} />
             
-            <button
-              type="button"
+            <Link
+              to="/contact"
               className="hidden rounded-full bg-linear-to-br from-orange-400 to-rose-400 px-5 py-2 text-xs font-bold tracking-widest text-white uppercase transition-all hover:shadow-lg hover:shadow-orange-500/20 active:scale-95 sm:block"
             >
               {locale === "EN" ? "Let's Talk" : "Kontak Kami"}
-            </button>
+            </Link>
 
             {/* Mobile Burger - Simplified */}
             <button
