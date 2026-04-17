@@ -95,7 +95,7 @@ export default function Home() {
   const data = useLoaderData<LoaderData>();
   const [locale, setLocale] = useState<"EN" | "ID">("EN");
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-clip">
       <Navbar locale={locale} onLocaleChange={setLocale} />
       <LandingPage {...data} locale={locale} />
     </div>

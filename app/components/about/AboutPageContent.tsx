@@ -58,43 +58,74 @@ const sectionCopy = {
 export function AboutPageContent({ about, experiences, skills, locale }: Props) {
   const aboutTranslation = pickTranslation(about?.translations, locale);
   const aboutFallback = pickTranslation(about?.translations, alternateLocale(locale));
+  const totalExperiences = experiences.length;
+  const totalSkills = skills.length;
 
   return (
     <div className="mx-auto max-w-7xl space-y-14 px-4 pb-20 md:px-6">
-      <section className="relative overflow-hidden rounded-[2rem] border border-stone-200/70 bg-white/75 p-6 shadow-sm backdrop-blur-sm md:p-10">
+      <section className="relative overflow-hidden rounded-[2rem] border border-stone-200/70 bg-white/80 p-6 shadow-sm backdrop-blur-sm md:p-10">
         <div className="pointer-events-none absolute -top-16 -left-16 h-64 w-64 rounded-full bg-orange-200/50 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-full bg-purple-200/40 blur-3xl" />
 
-        <div className="relative grid gap-10 md:grid-cols-[1.2fr,1fr] md:items-center">
-          <div className="space-y-5">
-            <p className="text-xs font-extrabold tracking-[0.35em] text-orange-500 uppercase">
+        <div className="relative grid gap-8 lg:grid-cols-[1.3fr,0.9fr] lg:items-center">
+          <div className="space-y-6">
+            <p className="text-xs font-extrabold tracking-[0.32em] text-orange-500 uppercase">
               {sectionCopy.heading[locale]}
             </p>
-            <h1 className="text-4xl leading-tight font-black tracking-tight text-stone-900 md:text-6xl">
+            <h1 className="text-4xl leading-tight font-black tracking-tight text-stone-900 md:text-5xl lg:text-6xl">
               {aboutTranslation?.title || aboutFallback?.title || sectionCopy.heading[locale]}
             </h1>
             <p className="max-w-2xl text-base leading-relaxed text-stone-600 md:text-lg">
               {aboutTranslation?.content || aboutFallback?.content || sectionCopy.subtitle[locale]}
             </p>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-stone-200 bg-white px-4 py-3">
+                <p className="text-[11px] font-bold tracking-[0.16em] text-stone-500 uppercase">
+                  {locale === "EN" ? "Experience Tracks" : "Track Pengalaman"}
+                </p>
+                <p className="mt-2 text-2xl font-black text-stone-900">{String(totalExperiences).padStart(2, "0")}</p>
+              </div>
+              <div className="rounded-2xl border border-stone-200 bg-white px-4 py-3">
+                <p className="text-[11px] font-bold tracking-[0.16em] text-stone-500 uppercase">
+                  {locale === "EN" ? "Skill Coverage" : "Cakupan Skill"}
+                </p>
+                <p className="mt-2 text-2xl font-black text-stone-900">{String(totalSkills).padStart(2, "0")}</p>
+              </div>
+            </div>
+
             <div className="inline-flex items-center gap-3 rounded-full border border-stone-200 bg-white px-4 py-2 text-xs font-bold tracking-[0.18em] text-stone-500 uppercase">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               {sectionCopy.openForWork[locale]}
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[1.5rem] border border-stone-200 bg-stone-100">
-            {about?.profile ? (
-              <img
-                src={about.profile}
-                alt={aboutTranslation?.title || aboutFallback?.title || "Profile"}
-                className="aspect-[4/5] w-full object-cover"
-                loading="lazy"
-              />
-            ) : (
-              <div className="flex aspect-[4/5] items-center justify-center text-sm font-semibold tracking-widest text-stone-400 uppercase">
-                Profile
+          <div className="relative mx-auto w-full max-w-sm lg:justify-self-end">
+            <div className="absolute -right-4 -bottom-4 hidden rounded-2xl border border-stone-200 bg-white px-4 py-3 shadow-sm sm:block">
+              <p className="text-[10px] font-bold tracking-[0.14em] text-stone-500 uppercase">
+                {locale === "EN" ? "Profile Focus" : "Fokus Profil"}
+              </p>
+              <p className="mt-1 text-sm font-extrabold text-stone-900">
+                {locale === "EN" ? "Design + Engineering" : "Desain + Engineering"}
+              </p>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[1.5rem] border border-stone-200 bg-stone-100 p-2">
+              <div className="overflow-hidden rounded-[1.1rem]">
+                {about?.profile ? (
+                  <img
+                    src={about.profile}
+                    alt={aboutTranslation?.title || aboutFallback?.title || "Profile"}
+                    className="aspect-[3/4] w-full object-cover transition-transform duration-500 hover:scale-105"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="flex aspect-[3/4] items-center justify-center text-sm font-semibold tracking-widest text-stone-400 uppercase">
+                    Profile
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </section>

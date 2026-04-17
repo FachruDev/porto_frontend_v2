@@ -21,34 +21,27 @@ export function ProjectDetail({ project, locale = "EN" }: { project: Project; lo
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] pb-40 selection:bg-orange-100">
-      
-      {/* --- 1. MINIMALIST FIXED NAV --- */}
-      <nav className="fixed top-0 z-50 flex w-full items-center justify-between px-6 py-8 md:px-12">
-        <Link 
-          to="/" 
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-stone-200 bg-white/80 backdrop-blur-md transition-transform hover:scale-110 active:scale-95"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-        </Link>
-        <div className="hidden rounded-full border border-stone-200 bg-white/80 px-6 py-2 backdrop-blur-md md:block">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400">Project Detail / {project.slug}</span>
+    <div className="min-h-screen overflow-x-clip bg-[#FDFDFD] pb-40 selection:bg-orange-100">
+      <main className="mx-auto max-w-7xl overflow-x-clip px-6 pt-12 md:px-12">
+        <div className="mb-10 flex items-center justify-between gap-4">
+          <Link
+            to="/work"
+            className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-xs font-bold tracking-[0.18em] text-stone-600 uppercase transition-colors hover:border-orange-300 hover:text-orange-600"
+          >
+            <span aria-hidden>{"<-"}</span>
+            Back to Work
+          </Link>
+          <span className="hidden rounded-full border border-stone-200 bg-white px-4 py-2 text-[10px] font-black tracking-[0.18em] text-stone-400 uppercase md:inline-flex">
+            {project.slug}
+          </span>
         </div>
-      </nav>
-
-      <main className="mx-auto max-w-7xl px-6 pt-32 md:px-12">
         
         {/* --- 2. ASYMMETRIC HEADER --- */}
         <div className="relative mb-32 grid gap-10 md:grid-cols-[1.5fr,1fr]">
           <div data-aos="fade-right">
             <span className="mb-4 block text-xs font-black uppercase tracking-[0.5em] text-orange-500">Overview</span>
-            <h1 className="text-6xl font-black leading-[0.85] tracking-[ -0.05em] text-stone-900 md:text-8xl lg:text-9xl">
-              {title?.split(" ").map((word, i) => (
-                <span key={i} className={i % 2 !== 0 ? "text-stone-200" : "block"}>{word} </span>
-              ))}
+            <h1 className="max-w-4xl break-words text-5xl font-black leading-[0.9] tracking-tight text-stone-900 md:text-7xl lg:text-8xl">
+              {title || "Project"}
             </h1>
           </div>
           
@@ -122,8 +115,10 @@ export function ProjectDetail({ project, locale = "EN" }: { project: Project; lo
       </main>
 
       {/* --- BACKGROUND DECOR (ULTRA LIGHT) --- */}
-      <div className="pointer-events-none fixed left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 text-[40vw] font-black text-stone-50 opacity-40">
-        {project.slug.substring(0, 3).toUpperCase()}
+      <div className="pointer-events-none fixed inset-0 -z-10 flex items-center justify-center overflow-hidden">
+        <span className="text-[32vw] font-black text-stone-50 opacity-40">
+          {project.slug.substring(0, 3).toUpperCase()}
+        </span>
       </div>
     </div>
   );

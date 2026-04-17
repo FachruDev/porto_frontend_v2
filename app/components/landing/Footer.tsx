@@ -17,13 +17,17 @@ export function Footer({ contact, socials, webConfig }: Props) {
   }, []);
 
   const currentYear = new Date().getFullYear();
+  const scrollToTop = () => {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <footer className="relative mt-20 overflow-hidden bg-stone-950 px-6 pt-24 pb-12 text-stone-50 md:px-12 md:pt-40">
       
       {/* --- 1. THE MASSIVE BACKGROUND TEXT (The "Amazing" Part) --- */}
       <div className="pointer-events-none absolute -top-10 left-0 w-full overflow-hidden opacity-[0.03] select-none">
-        <h2 className="whitespace-nowrap text-[25vw] font-black leading-none tracking-[ -0.05em]">
+        <h2 className="whitespace-nowrap text-[25vw] font-black leading-none tracking-[-0.05em]">
           {webConfig?.metaTitle?.toUpperCase() || "CREATIVE LAB"}
         </h2>
       </div>
@@ -95,11 +99,16 @@ export function Footer({ contact, socials, webConfig }: Props) {
 
           {/* Navigation / Other */}
           <div className="flex flex-col items-start md:items-end justify-end">
-            <div className="h-12 w-12 rounded-full border border-stone-800 flex items-center justify-center animate-bounce">
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className="h-12 w-12 rounded-full border border-stone-800 flex items-center justify-center transition-colors hover:border-orange-400"
+              aria-label="Back to top"
+            >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-orange-500">
                     <path d="M12 19V5M5 12l7-7 7 7"/>
                 </svg>
-            </div>
+            </button>
           </div>
         </div>
 
@@ -113,9 +122,13 @@ export function Footer({ contact, socials, webConfig }: Props) {
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-600 cursor-help hover:text-stone-300 transition-colors">
               Privacy Policy
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-600">
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-600 transition-colors hover:text-stone-300"
+            >
               Back to Top ↑
-            </span>
+            </button>
           </div>
         </div>
 

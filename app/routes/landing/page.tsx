@@ -62,7 +62,7 @@ export default function LandingPage({
   }, []);
 
   return (
-    <main className="min-h-screen bg-linear-to-br from-orange-200 via-purple-100 to-rose-200/70 scroll-smooth">
+    <main className="min-h-screen overflow-x-clip bg-linear-to-br from-orange-200 via-purple-100 to-rose-200/70 scroll-smooth">
       <div className="space-y-10">
         <HeroSection hero={hero} locale={locale} />
         <AboutSection about={about} locale={locale} />
