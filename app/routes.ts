@@ -5,6 +5,7 @@ export default [
   route("about", "routes/about/page.tsx"),
   route("work", "routes/work/page.tsx"),
   route("journal", "routes/journal/page.tsx"),
+  route("journal/:slug", "routes/journal.$slug.tsx"),
   route("contact", "routes/contact/page.tsx"),
   route("admin/login", "routes/admin/login.tsx"),
   route("project/:slug", "routes/project.$slug.tsx"),

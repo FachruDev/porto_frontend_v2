@@ -28,7 +28,7 @@ const stripHtml = (value: string | null | undefined) =>
 
 export const clientLoader: ClientLoaderFunction = async () => {
   const [postsResult, categoriesResult, socialsResult, contactResult, webConfigResult] = await Promise.allSettled([
-    listLandingBlogPosts(),
+    listLandingBlogPosts({ limit: 500, sort: "new" }),
     listLandingBlogCategories(),
     listLandingSocials(),
     getLandingContactInfo(),
