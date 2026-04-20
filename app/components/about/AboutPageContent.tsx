@@ -112,7 +112,7 @@ export function AboutPageContent({ about, experiences, skills, locale }: Props) 
         </div>
       </section>
 
-      <section className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm md:p-8">
+      <section className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm md:p-8" data-aos="fade-right">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
             <h2 className="text-3xl font-black tracking-tight text-stone-900 md:text-4xl">
@@ -173,7 +173,7 @@ export function AboutPageContent({ about, experiences, skills, locale }: Props) 
         )}
       </section>
 
-      <section className="relative overflow-hidden rounded-[2rem] border border-stone-200 bg-linear-to-br from-white via-stone-50 to-orange-50/40 p-6 shadow-sm md:p-8">
+      <section className="relative overflow-hidden rounded-[2rem] border border-stone-200 bg-linear-to-br from-white via-stone-50 to-orange-50/40 p-6 shadow-sm md:p-8" data-aos="fade-left">
         <div className="pointer-events-none absolute -top-20 -right-14 h-56 w-56 rounded-full bg-orange-200/40 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full bg-purple-200/30 blur-3xl" />
 
