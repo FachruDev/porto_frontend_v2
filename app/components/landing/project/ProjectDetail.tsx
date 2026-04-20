@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router"; // Gunakan "next/link" jika di Next.js
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -12,7 +12,9 @@ const pick = <T extends { locale: string }>(list: T[] | undefined, locale: "EN" 
 export function ProjectDetail({ project, locale = "EN" }: { project: Project; locale?: "EN" | "ID" }) {
   const current = pick(project.translations, locale);
   const fallback = pick(project.translations, locale === "EN" ? "ID" : "EN");
-  
+  const [showBackButton, setShowBackButton] = useState(true);
+  const lastScrollY = useRef(0);
+
   const title = current?.title || fallback?.title;
   const description = current?.description || fallback?.description;
 
@@ -20,18 +22,45 @@ export function ProjectDetail({ project, locale = "EN" }: { project: Project; lo
     AOS.init({ duration: 1000, once: false, mirror: true });
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      if (currentY < 40) {
+        setShowBackButton(true);
+      } else if (delta > 8) {
+        setShowBackButton(false);
+      } else if (delta < -8) {
+        setShowBackButton(true);
+      }
+
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div className="min-h-screen overflow-x-clip bg-[#FDFDFD] pb-40 selection:bg-orange-100">
+      <div
+        className={`fixed top-4 left-4 z-50 transition-all duration-300 md:top-6 md:left-6 ${
+          showBackButton ? "translate-y-0 opacity-100" : "-translate-y-16 opacity-0"
+        }`}
+      >
+        <Link
+          to="/work"
+          className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white/95 px-4 py-2 text-xs font-bold tracking-[0.18em] text-stone-600 uppercase shadow-sm backdrop-blur transition-colors hover:border-orange-300 hover:text-orange-600"
+        >
+          <span aria-hidden>{"<-"}</span>
+          Back to Work
+        </Link>
+      </div>
+
       <main className="mx-auto max-w-7xl overflow-x-clip px-6 pt-12 md:px-12">
-        <div className="mb-10 flex items-center justify-between gap-4">
-          <Link
-            to="/work"
-            className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-xs font-bold tracking-[0.18em] text-stone-600 uppercase transition-colors hover:border-orange-300 hover:text-orange-600"
-          >
-            <span aria-hidden>{"<-"}</span>
-            Back to Work
-          </Link>
-          <span className="hidden rounded-full border border-stone-200 bg-white px-4 py-2 text-[10px] font-black tracking-[0.18em] text-stone-400 uppercase md:inline-flex">
+        <div className="mb-10 flex items-center justify-end gap-4">
+          <span className="rounded-full border border-stone-200 bg-white px-4 py-2 text-[10px] font-black tracking-[0.18em] text-stone-400 uppercase">
             {project.slug}
           </span>
         </div>
